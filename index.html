@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crash Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Bar for Previous Multipliers & User Info -->
+        <header class="top-bar">
+            <div class="previous-multipliers">
+                <span>Previous:</span>
+                <span class="multiplier-badge old-crash">1.50x</span>
+                <span class="multiplier-badge old-crash">9.27x</span>
+                <span class="multiplier-badge old-crash">1.00x</span>
+                <span class="multiplier-badge old-crash">3.34x</span>
+                <span class="multiplier-badge old-crash">10.68x</span>
+            </div>
+            <div class="user-info">
+                <span id="usernameDisplay">Guest</span> | Balance: <span id="balanceDisplay">1000.00</span> fict$
+                <button id="loginBtn">Login</button>
+                <button id="signupBtn">Sign Up</button>
+                <button id="adminPanelBtn" style="display:none;">Admin</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Left Panel: Bet Controls & Leaderboard -->
+            <aside class="left-panel">
+                <div class="bet-controls">
+                    <div class="tabs">
+                        <button class="tab-button active" data-tab="manual">Manual</button>
+                        <button class="tab-button" data-tab="auto" disabled>Auto</button> <!-- Disabled as requested -->
+                    </div>
+
+                    <div id="manual" class="tab-content active">
+                        <div class="input-group">
+                            <label for="betAmount">Amount</label>
+                            <div class="amount-input-wrapper">
+                                <span class="currency-icon"> fict$</span>
+                                <input type="number" id="betAmount" value="10.00" step="0.01">
+                                <div class="amount-modifiers">
+                                    <button id="betHalf">½</button>
+                                    <button id="betDouble">2x</button>
+                                    <button id="betMax">Max</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="cashoutAt">Cashout At</label>
+                            <div class="cashout-input-wrapper">
+                                <input type="number" id="cashoutAt" value="2.00" step="0.01">
+                                <span class="multiplier-suffix">x</span>
+                                <!-- Up/Down arrows can be added with more JS -->
+                            </div>
+                        </div>
+
+                        <div class="info-group">
+                            <span>Net Gain on Win</span>
+                            <span id="netGainDisplay">10.00 fict$</span>
+                        </div>
+
+                        <button id="playButton" class="play-button">Play (Next Round)</button>
+                        <div id="maxWinDisclaimer" class="disclaimer"></div>
+
+                    </div>
+                </div>
+
+                <div class="leaderboard-section">
+                    <h4>Current Round Bets (<span id="activeBetsCount">0</span>)</h4>
+                    <div class="leaderboard-header">
+                        <span>User</span>
+                        <span>@ Multi</span>
+                        <span>Bet</span>
+                        <span>Payout</span>
+                    </div>
+                    <ul id="leaderboardList" class="leaderboard-list">
+                        <!-- JS will populate this -->
+                        <!-- Example item:
+                        <li class="leaderboard-item">
+                            <span>User123</span>
+                            <span class="bet-multiplier">1.50x</span>
+                            <span class="bet-amount">100</span>
+                            <span class="payout-amount">150</span>
+                        </li>
+                        <li class="leaderboard-item cashed-out">
+                            <span>ProGamer</span>
+                            <span class="bet-multiplier">2.10x</span>
+                            <span class="bet-amount">50</span>
+                            <span class="payout-amount">105</span>
+                        </li>
+                         <li class="leaderboard-item lost">
+                            <span>UnluckyJoe</span>
+                            <span class="bet-multiplier">Crashed</span>
+                            <span class="bet-amount">20</span>
+                            <span class="payout-amount">-20</span>
+                        </li>
+                        -->
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Center Panel: Graph -->
+            <main class="center-panel">
+                <div class="graph-container">
+                    <div id="gameStatus" class="game-status-overlay">Starting...</div>
+                    <div id="currentMultiplierDisplay" class="current-multiplier">1.00x</div>
+                    <canvas id="crashGraph"></canvas> <!-- For actual graph drawing -->
+                     <div class="graph-placeholder">Graph Area</div> <!-- Placeholder until canvas is implemented -->
+                </div>
+                 <div class="site-bankroll-display">
+                    Site Pool: <span id="siteBankrollDisplay">1,250,000.00</span> fict$
+                </div>
+            </main>
+
+            <!-- Right Panel: Chat -->
+            <aside class="right-panel chat-sidebar">
+                <h4>Chat</h4>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="chat-message"><strong>System:</strong> Welcome to the game!</div>
+                    <!-- JS will populate this -->
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="chatMessageInput" placeholder="Say something...">
+                    <button id="sendChatMessage">Send</button>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Footer: Provably Fair, Sound, etc. -->
+        <footer class="bottom-bar">
+            <div class="game-controls-footer">
+                <button id="soundToggle">🔊</button>
+                <button id="fairnessBtn">Fairness</button>
+                <!-- Add more icons/buttons as needed -->
+            </div>
+            <div class="network-status">
+                Network Status: <span class="status-dot good"></span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modals for Login, Signup, Admin, Fairness (to be added) -->
+    <div id="loginModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Login</h2>
+            <input type="text" placeholder="Username" id="loginUsername">
+            <input type="password" placeholder="Password" id="loginPassword">
+            <button id="submitLogin">Login</button>
+        </div>
+    </div>
+
+    <div id="signupModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Sign Up</h2>
+            <input type="text" placeholder="Username" id="signupUsername">
+            <input type="password" placeholder="Password" id="signupPassword">
+            <input type="password" placeholder="Confirm Password" id="signupConfirmPassword">
+            <button id="submitSignup">Sign Up</button>
+        </div>
+    </div>
+
+    <div id="adminModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Admin Panel</h2>
+            <p>Site Bankroll: <span id="adminBankrollDisplay">1,250,000.00</span> fict$</p>
+            <div>
+                <label for="adminUsernameCredits">Username:</label>
+                <input type="text" id="adminUsernameCredits">
+                <label for="adminCreditAmount">Amount:</label>
+                <input type="number" id="adminCreditAmount">
+                <button id="adminGiveCredits">Give Credits</button>
+            </div>
+            <hr>
+            <div>
+                <label for="adminBankrollAmount">Add to Bankroll:</label>
+                <input type="number" id="adminBankrollAmount">
+                <button id="adminIncreaseBankroll">Increase Bankroll</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="fairnessModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Provably Fair</h2>
+            <p><strong>Round ID:</strong> <span id="fairnessRoundId">N/A</span></p>
+            <p><strong>Server Seed Hash (Current/Next):</strong> <span id="fairnessServerSeedHash">abc123def456...</span></p>
+            <p><strong>Client Seed:</strong> <input type="text" id="fairnessClientSeed" value="changeMeForCustomSeed123"></p>
+            <p><strong>Nonce:</strong> <span id="fairnessNonce">0</span></p>
+            <hr>
+            <p><em>After game:</em></p>
+            <p><strong>Revealed Server Seed:</strong> <span id="fairnessRevealedServerSeed">Not available yet</span></p>
+            <button id="verifyGameBtn" disabled>Verify Game</button>
+            <p id="verificationResult"></p>
+        </div>
+    </div>
+
+
+    <script src="app.js"></script>
+</body>
+</html>
