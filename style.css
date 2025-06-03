@@ -1,0 +1,459 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #1a2c38; /* Dark blue-grey (Stake-like) */
+    color: #c5c5d2; /* Light grey text */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to top */
+    min-height: 100vh;
+    font-size: 14px;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 1400px; /* Adjust as needed */
+    display: flex;
+    flex-direction: column;
+    background-color: #213743; /* Slightly lighter background for main container */
+    border-radius: 8px;
+    margin-top: 20px; /* Space from top */
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+/* Top Bar */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #1f2d38; /* Darker shade for header/footer */
+    border-bottom: 1px solid #304552;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+.previous-multipliers .multiplier-badge {
+    background-color: #304552;
+    color: #a0b8c8;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-left: 5px;
+    font-size: 0.9em;
+}
+.previous-multipliers .multiplier-badge.old-crash { /* Example for coloring */
+    /* color: #e91e63; For crashed */
+    color: #4caf50; /* For win > 1x */
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.user-info button {
+    background-color: #007bff; /* Placeholder blue */
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.user-info button:hover {
+    background-color: #0056b3;
+}
+
+
+/* Main Content Layout */
+.main-content {
+    display: flex;
+    flex-grow: 1;
+}
+
+/* Left Panel */
+.left-panel {
+    width: 280px; /* Fixed width for bet controls */
+    padding: 15px;
+    background-color: #263f4e; /* Slightly different shade for panel */
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #304552;
+}
+.bet-controls .tabs {
+    display: flex;
+    margin-bottom: 15px;
+}
+.tab-button {
+    flex-grow: 1;
+    padding: 10px;
+    background-color: #304552;
+    color: #a0b8c8;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+}
+.tab-button.active {
+    background-color: #3a586a;
+    color: #fff;
+}
+.tab-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.input-group, .info-group {
+    margin-bottom: 15px;
+}
+.input-group label, .info-group span:first-child {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    color: #a0b8c8;
+}
+.amount-input-wrapper, .cashout-input-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: #1f2d38;
+    border-radius: 4px;
+    padding: 2px;
+}
+.amount-input-wrapper input, .cashout-input-wrapper input {
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    padding: 8px;
+    font-size: 1em;
+    outline: none;
+}
+.currency-icon, .multiplier-suffix {
+    padding: 0 8px;
+    color: #a0b8c8;
+}
+.amount-modifiers button {
+    background-color: #304552;
+    color: #a0b8c8;
+    border: none;
+    padding: 6px 8px;
+    margin-left: 3px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+.amount-modifiers button:hover {
+    background-color: #3a586a;
+}
+
+#netGainDisplay {
+    font-weight: bold;
+    color: #4caf50; /* Green for gain */
+}
+
+.play-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4caf50; /* Stake green */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.play-button:hover {
+    background-color: #45a049;
+}
+.play-button.cashout-active {
+    background-color: #e91e63; /* Stake red for cashout */
+}
+.play-button.cashout-active:hover {
+    background-color: #d81b60;
+}
+.disclaimer {
+    font-size: 0.8em;
+    color: #ffc107; /* Amber/yellow for warning */
+    text-align: center;
+    margin-top: 8px;
+}
+
+
+/* Leaderboard Section */
+.leaderboard-section {
+    margin-top: 20px;
+    background-color: #1f2d38;
+    padding: 10px;
+    border-radius: 4px;
+    flex-grow: 1; /* Takes remaining space */
+    display: flex;
+    flex-direction: column;
+    min-height: 150px; /* Minimum height for scroll */
+}
+.leaderboard-section h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 0.95em;
+    color: #e0e0e0;
+}
+.leaderboard-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr 1.5fr; /* Adjust as needed */
+    font-size: 0.8em;
+    color: #a0b8c8;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #304552;
+    margin-bottom: 5px;
+}
+.leaderboard-header span {
+    text-align: left;
+}
+.leaderboard-header span:not(:first-child) {
+    text-align: right;
+}
+
+.leaderboard-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto; /* Enables scrollbar */
+    max-height: 200px; /* Adjust as needed for compactness */
+    flex-grow: 1;
+}
+.leaderboard-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr 1.5fr;
+    padding: 5px 0;
+    font-size: 0.85em;
+    border-bottom: 1px solid #2a3f4c;
+    align-items: center;
+}
+.leaderboard-item:last-child {
+    border-bottom: none;
+}
+.leaderboard-item span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.leaderboard-item .bet-multiplier,
+.leaderboard-item .bet-amount,
+.leaderboard-item .payout-amount {
+    text-align: right;
+}
+
+.leaderboard-item.cashed-out .payout-amount { color: #4caf50; } /* Green for win */
+.leaderboard-item.lost .payout-amount { color: #e91e63; } /* Red for loss */
+.leaderboard-item.lost .bet-multiplier { color: #e91e63; }
+
+/* Center Panel */
+.center-panel {
+    flex-grow: 1;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative; /* For overlay text */
+}
+.graph-container {
+    width: 100%;
+    height: 400px; /* Adjust as needed */
+    background-color: #1f2d38; /* Dark background for graph */
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Important for graph drawing */
+}
+.graph-placeholder { /* Temporary placeholder styling */
+    color: #546e7a;
+    font-size: 2em;
+}
+#crashGraph {
+    width: 100%;
+    height: 100%;
+}
+
+.current-multiplier {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 4em; /* Large multiplier display */
+    font-weight: bold;
+    color: #ffffff; /* White, will change color as it rises */
+    z-index: 10;
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+.current-multiplier.rising { color: #ffeb3b; } /* Yellow/Orange while rising */
+.current-multiplier.crashed { color: #e91e63; } /* Red when crashed */
+
+.game-status-overlay {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em;
+    color: #a0b8c8;
+    z-index: 10;
+}
+.site-bankroll-display {
+    font-size: 0.8em;
+    color: #78909c;
+    margin-top: 10px;
+}
+
+/* Right Panel (Chat) */
+.right-panel.chat-sidebar {
+    width: 280px; /* Fixed width for chat */
+    padding: 15px;
+    background-color: #263f4e;
+    border-left: 1px solid #304552;
+    display: flex;
+    flex-direction: column;
+}
+.chat-sidebar h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #e0e0e0;
+}
+.chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    background-color: #1f2d38;
+    padding: 8px;
+    border-radius: 4px;
+}
+.chat-message {
+    padding: 4px 0;
+    font-size: 0.9em;
+}
+.chat-message strong {
+    color: #82aaff; /* Example color for usernames */
+}
+.chat-input {
+    display: flex;
+}
+.chat-input input {
+    flex-grow: 1;
+    padding: 8px;
+    background-color: #1f2d38;
+    border: 1px solid #304552;
+    color: #fff;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+}
+.chat-input button {
+    padding: 8px 12px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+.chat-input button:hover {
+    background-color: #45a049;
+}
+
+/* Bottom Bar */
+.bottom-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #1f2d38;
+    border-top: 1px solid #304552;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+.game-controls-footer button {
+    background: none;
+    border: none;
+    color: #a0b8c8;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-right: 10px;
+}
+.game-controls-footer button:hover {
+    color: #fff;
+}
+.network-status .status-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #4caf50; /* Green for good */
+    margin-left: 5px;
+}
+.network-status .status-dot.bad { background-color: #e91e63; }
+
+
+/* Modals */
+.modal {
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+    display: flex; /* Use flexbox for centering */
+    align-items: center; /* Vertical center */
+    justify-content: center; /* Horizontal center */
+}
+.modal-content {
+    background-color: #263f4e;
+    padding: 25px;
+    border: 1px solid #304552;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 450px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    color: #c5c5d2;
+}
+.modal-content h2 {
+    margin-top: 0;
+    color: #fff;
+}
+.modal-content input[type="text"],
+.modal-content input[type="password"],
+.modal-content input[type="number"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #1f2d38;
+    border: 1px solid #304552;
+    color: #fff;
+    border-radius: 4px;
+}
+.modal-content button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.modal-content button:hover {
+    background-color: #45a049;
+}
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close-button:hover,
+.close-button:focus {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+#fairnessModal .modal-content { max-width: 600px; }
+#fairnessModal p { margin-bottom: 10px; }
+#fairnessModal input[type="text"] { width: auto; flex-grow: 1; margin-left: 10px; }
+#fairnessModal hr { border-color: #304552; margin: 15px 0; }
